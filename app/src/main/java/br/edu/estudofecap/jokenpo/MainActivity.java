@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView resultado, ganhadas, perdidas;
     EditText inputRodadas;
+    Button btnReset;
     int placarVencidas, placarPerdidas, numeroJogadas, numeroRodadas;
 
     ImageView imgApp;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         ganhadas = findViewById(R.id.txtPlacarGanhou);
         perdidas = findViewById(R.id.txtPlacarPerdeu);
         inputRodadas = findViewById(R.id.inputRodadas);
+
+        btnReset = findViewById(R.id.btnReset);
 
         placarVencidas = 0;
         placarPerdidas = 0;
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void opcaoSelec(String opcaoSelec){
-        numeroRodadas = Integer.parseInt(inputRodadas.getText().toString());
+
         if(podeJogar()){
             int numero = new Random().nextInt(3);
             String[] opcoes = {"pedra","papel","tesoura"};
@@ -52,8 +56,12 @@ public class MainActivity extends AppCompatActivity {
             String opcaoApp = opcoes[numero];
             compararJogo(opcaoApp, opcaoSelec);
             setarImagemApp(opcaoApp);
+            numeroJogadas++;
+            if(!podeJogar()){
+                definirVencedor();
+                btnReset.setVisibility(View.VISIBLE);
+            }
         }
-        numeroJogadas++;
 
     }
 
@@ -85,7 +93,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    public void definirVencedor(){
+        if (placarPerdidas > placarVencidas){
+            resultado.setText("Você perdeu");
+        } else if(placarVencidas == placarPerdidas){
+            resultado.setText("Empate no final");
+        }else{
+            resultado.setText("Você ganhou");
+        }
+    }
     public void ganhou(){
         placarVencidas++;
         resultado.setText("Ganhou");
@@ -97,8 +113,13 @@ public class MainActivity extends AppCompatActivity {
         perdidas.setText("Perdidas:\n" + placarPerdidas);
     }
     public boolean podeJogar(){
-        if(numeroJogadas <= numeroRodadas){
-            return true;
+        if(!inputRodadas.getText().toString().equals("")){
+            numeroRodadas = Integer.parseInt(inputRodadas.getText().toString());
+            if(numeroJogadas < numeroRodadas){
+                return true;
+            }
+        }else{
+            resultado.setText("Rodadas não definidas");
         }
         return false;
     }
@@ -111,5 +132,7 @@ public class MainActivity extends AppCompatActivity {
         resultado.setText("Resultado");
         ganhadas.setText("Vencidas:\n" + placarVencidas);
         perdidas.setText("Perdidas:\n" + placarPerdidas);
+
+        btnReset.setVisibility(View.INVISIBLE);
     }
 }

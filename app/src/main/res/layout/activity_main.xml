@@ -138,7 +138,7 @@
         android:layout_height="wrap_content"
         android:onClick="limpar"
         android:text="Jogar novamente"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
