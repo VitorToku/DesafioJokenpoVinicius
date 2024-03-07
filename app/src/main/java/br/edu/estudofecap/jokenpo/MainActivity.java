@@ -4,14 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
     TextView resultado, ganhadas, perdidas;
-    int placarVencidas, placarPerdidas;
+    EditText inputRodadas;
+    int placarVencidas, placarPerdidas, numeroJogadas, numeroRodadas;
 
     ImageView imgApp;
     @Override
@@ -24,10 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
         ganhadas = findViewById(R.id.txtPlacarGanhou);
         perdidas = findViewById(R.id.txtPlacarPerdeu);
+        inputRodadas = findViewById(R.id.inputRodadas);
 
         placarVencidas = 0;
         placarPerdidas = 0;
-
+        numeroJogadas = 0;
     }
     public void selecPedra(View view){
         this.opcaoSelec("pedra");
@@ -40,17 +44,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void opcaoSelec(String opcaoSelec){
-        int numero = new Random().nextInt(3);
-        String[] opcoes = {"pedra","papel","tesoura"};
+        numeroRodadas = Integer.parseInt(inputRodadas.getText().toString());
+        if(podeJogar()){
+            int numero = new Random().nextInt(3);
+            String[] opcoes = {"pedra","papel","tesoura"};
 
-        String opcaoApp = opcoes[numero];
-        compararJogo(opcaoApp, opcaoSelec);
-        setarImagemApp(opcaoApp);
+            String opcaoApp = opcoes[numero];
+            compararJogo(opcaoApp, opcaoSelec);
+            setarImagemApp(opcaoApp);
+        }
+        numeroJogadas++;
+
     }
 
     public void compararJogo(String opcaoApp, String opcaoJogador){
         if(opcaoJogador == opcaoApp){
-            perdeu();
+            resultado.setText("Empate");
         }else if(opcaoJogador == "pedra" && opcaoApp == "papel"){
             perdeu();
         }else if(opcaoJogador == "papel" && opcaoApp == "tesoura"){
@@ -85,6 +94,22 @@ public class MainActivity extends AppCompatActivity {
     public void perdeu(){
         placarPerdidas++;
         resultado.setText("Perdeu");
+        perdidas.setText("Perdidas:\n" + placarPerdidas);
+    }
+    public boolean podeJogar(){
+        if(numeroJogadas <= numeroRodadas){
+            return true;
+        }
+        return false;
+    }
+
+    public void limpar(View view){
+        placarVencidas = 0;
+        placarPerdidas = 0;
+        numeroJogadas = 0;
+        imgApp.setImageResource(R.drawable.padrao);
+        resultado.setText("Resultado");
+        ganhadas.setText("Vencidas:\n" + placarVencidas);
         perdidas.setText("Perdidas:\n" + placarPerdidas);
     }
 }
